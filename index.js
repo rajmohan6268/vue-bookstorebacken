@@ -31,24 +31,23 @@ const db = require("./models");
 const Role = db.role;
 const User = db.user;
 
-  db.mongoose
-      .connect(db.url, {
-          useNewUrlParser: true,
-          useUnifiedTopology: true
-      })
-      .then(() => {
-          console.log('Connected to the database!')
-          initial();
-      })
-      .catch((err) => {
-          console.log('Cannot connect to the database!', err)
-          process.exit()
-      })
+db.mongoose
+  .connect(db.url, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("Connected to the database!");
+    initial();
+  })
+  .catch((err) => {
+    console.log("Cannot connect to the database!", err);
+    process.exit();
+  });
 
-
-      app.get("/", (req, res) => {
-        res.json({ message: "Welcome to Book store." });
-      });
+app.get("/", (req, res) => {
+  res.json({ message: "Welcome to Book store." });
+});
 
 // simple route
 app.get("/api/", (req, res) => {
