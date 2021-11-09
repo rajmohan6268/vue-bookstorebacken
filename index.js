@@ -46,7 +46,9 @@ const User = db.user;
       })
 
 
-
+      app.get("/", (req, res) => {
+        res.json({ message: "Welcome to Book store." });
+      });
 
 // simple route
 app.get("/api/", (req, res) => {
