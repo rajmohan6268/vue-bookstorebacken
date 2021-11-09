@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
+const dbConfig = require('../config/db.config.js')
 
 const db = {};
+db.url = dbConfig.url
 
 db.mongoose = mongoose;
 

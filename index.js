@@ -6,10 +6,13 @@ var bcrypt = require("bcryptjs");
 
 const app = express();
 
-var corsOptions = {
-  origin: "http://localhost:8080",
-};
-
+// allow cors requests from any origin and with credentials
+app.use(
+  cors({
+    origin: (origin, callback) => callback(null, true),
+    credentials: true,
+  })
+);
 
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(
@@ -18,7 +21,7 @@ app.use(
     extended: false,
   })
 );
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 
 app.use(bodyParser.json());
 
@@ -27,19 +30,23 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const db = require("./models");
 const Role = db.role;
 const User = db.user;
-db.mongoose
-  .connect(`mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
-    console.log("Successfully connect to MongoDB.");
-    initial();
-  })
-  .catch((err) => {
-    console.error("Connection error", err);
-    process.exit();
-  });
+
+  db.mongoose
+      .connect(db.url, {
+          useNewUrlParser: true,
+          useUnifiedTopology: true
+      })
+      .then(() => {
+          console.log('Connected to the database!')
+          initial();
+      })
+      .catch((err) => {
+          console.log('Cannot connect to the database!', err)
+          process.exit()
+      })
+
+
+
 
 // simple route
 app.get("/api/", (req, res) => {
@@ -62,7 +69,7 @@ function initial() {
         name: "user",
       }).save((err) => {
         if (err) {
-        //  console.log("error", err);
+          //  console.log("error", err);
         }
 
         console.log("added 'user' to roles collection");
@@ -72,14 +79,14 @@ function initial() {
         name: "admin",
       }).save(async (err) => {
         if (err) {
-         // console.log("error", err);
+          // console.log("error", err);
         }
 
         let _admindata = await Role.findOne({ name: "admin" });
 
         console.log("added 'admin' to roles collection", _admindata);
 
-       // console.log(_admindata);
+        // console.log(_admindata);
 
         let passwod = bcrypt.hashSync("admin", 8);
 
@@ -89,7 +96,7 @@ function initial() {
           roles: _admindata._id,
         }).save((err) => {
           if (err) {
-         console.log("error", err);
+            console.log("error", err);
           }
 
           console.log("added 'admin' to users collection");
