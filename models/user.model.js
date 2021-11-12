@@ -11,6 +11,9 @@ const User = mongoose.model(
         ref: 'Role',
       },
     ],
+    token:String,
+    refreshtoken:String,
+
   })
 );
 
